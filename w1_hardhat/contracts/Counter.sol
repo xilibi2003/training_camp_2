@@ -2,6 +2,8 @@
 
 pragma solidity ^0.8.0;
 
+import "hardhat/console.sol";
+
 contract Counter {
     uint public counter;
 
@@ -11,6 +13,7 @@ contract Counter {
 
     function count() public {
         counter = counter + 1;
+        console.log(counter);
     }
 
 }

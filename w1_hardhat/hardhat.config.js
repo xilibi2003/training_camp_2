@@ -1,5 +1,6 @@
 require("@nomicfoundation/hardhat-toolbox");
 require('hardhat-abi-exporter');
+require("./task/balance.js");
 
 let dotenv = require('dotenv')
 dotenv.config({ path: "./.env" })
