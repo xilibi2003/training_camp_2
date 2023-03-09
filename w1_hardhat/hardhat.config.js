@@ -1,11 +1,12 @@
 require("@nomicfoundation/hardhat-toolbox");
-
+require('hardhat-abi-exporter');
 
 let dotenv = require('dotenv')
 dotenv.config({ path: "./.env" })
 
 const mnemonic = process.env.MNEMONIC
-const privateKey = process.env.PRIVATEKEY
+const scankey = process.env.ETHERSCAN_API_KEY
+// const privateKey = process.env.PRIVATEKEY
 
 /** @type import('hardhat/config').HardhatUserConfig */
 module.exports = {
@@ -22,10 +23,26 @@ module.exports = {
 
     mumbai: {
       url: "https://endpoints.omniatech.io/v1/matic/mumbai/public",
-      accounts: [privateKey],
+      accounts: {
+        mnemonic: mnemonic,
+      },
       chainId: 80001,
     },
 
-  }
+  },
+
+
+  abiExporter: {
+      path: './deployments/abi',
+      clear: true,
+      flat: true,
+      only: [],
+      spacing: 2,
+      pretty: true,
+  },
+
+  etherscan: {
+    apiKey: scankey
+},
 
 };

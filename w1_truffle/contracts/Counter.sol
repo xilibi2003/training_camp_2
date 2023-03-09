@@ -5,8 +5,8 @@ pragma solidity ^0.8.0;
 contract Counter {
     uint public counter;
 
-    constructor() {
-        counter = 1;
+    constructor(uint x) {
+        counter = x;
     }
 
     function count() public {
