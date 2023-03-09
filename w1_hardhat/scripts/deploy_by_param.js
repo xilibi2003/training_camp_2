@@ -1,4 +1,7 @@
+const hre = require("hardhat");
 const { ethers, network, artifacts } = require("hardhat");
+
+
 
 const { writeAbiAddr } = require('./artifact_saver.js');
 
@@ -8,7 +11,7 @@ const value = prams[2]
 console.log("Counter deploy with value:", value);
 
 async function main() {
-  // await hre.run('compile');
+  await hre.run('compile');
   const Counter = await ethers.getContractFactory("Counter");
   const counter = await Counter.deploy(value);
 

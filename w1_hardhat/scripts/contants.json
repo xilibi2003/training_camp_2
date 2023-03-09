@@ -1,0 +1,9 @@
+{
+  "mumbai": {
+    "INIT": 1
+  },
+
+  "localdev": {
+    "INIT": 0
+  }
+}
