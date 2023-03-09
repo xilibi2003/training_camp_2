@@ -11,10 +11,10 @@ async function main() {
   await counter.deployed();
   console.log("Counter deployed to:", counter.address);
 
-  // let Artifact = await artifacts.readArtifact("Counter");
-  // await writeAbiAddr(Artifact, counter.address, "Counter", network.name);
+  let Artifact = await artifacts.readArtifact("Counter");
+  await writeAbiAddr(Artifact, counter.address, "Counter", network.name);
 
-  // console.log(`Please verify: npx hardhat verify ${counter.address}`);
+  console.log(`Please verify: npx hardhat verify ${counter.address}`);
 
 }
 
