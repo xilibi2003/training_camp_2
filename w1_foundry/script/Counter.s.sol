@@ -10,6 +10,6 @@ contract CounterScript is BaseScript {
         Counter c = new Counter();
 
         console.log("Counter deployed on %s", address(c));
-        saveContract("local","Counter" , address(c));
+        saveContract("local", "Counter" , address(c));
     }
 }

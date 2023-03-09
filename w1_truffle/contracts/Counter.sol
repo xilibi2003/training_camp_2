@@ -6,7 +6,7 @@ contract Counter {
     uint public counter;
 
     constructor() {
-        counter = 0;
+        counter = 1;
     }
 
     function count() public {
