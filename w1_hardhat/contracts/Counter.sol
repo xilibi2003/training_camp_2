@@ -16,7 +16,7 @@ contract Counter {
     function count() public {
         require(msg.sender == owner, "invalid call");
         counter = counter + 1;
-        console.log(counter);
+        console.log("counter is %s", counter);
 
     }
 
