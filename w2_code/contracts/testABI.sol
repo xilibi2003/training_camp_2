@@ -15,6 +15,11 @@ contract Counter {
   }
 }
 
+	function newCall() public  {
+		Counter c = new Counter();
+		c.count();
+	}
+
 contract testAbi {
   function call(address counter, bytes memory payload) public {
     (bool success, ) = counter.call(payload);
