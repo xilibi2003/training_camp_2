@@ -9,18 +9,10 @@ contract Counter {
         sender = msg.sender;
     }
 
-    event logdata(uint x);
 
-    receive() external payable {
-        emit logdata(msg.value);
+    fallback() external payable {
     }
 
-    fallback() external {
-    }
-
-    function getBalance() public view returns (uint) {
-        return address(this).balance;
-    }
 }
 
 contract CallTest {

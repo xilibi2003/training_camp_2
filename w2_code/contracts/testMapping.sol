@@ -6,4 +6,8 @@ contract MappingExample {
     function update(uint newBalance) public {
         balances[msg.sender] = newBalance;
     }
+
+    function get(address key) public view returns(uint) {
+        return balances[key];
+    }
 }

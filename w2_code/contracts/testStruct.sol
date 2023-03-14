@@ -14,6 +14,12 @@ contract testStruct {
         funders[id] = Funder(msg.sender, msg.value);
     }
 
+    function modifyFunder(uint id) public {
+        Funder storage f = funders[id];
+        f.addr = msg.sender;
+        f.amount = 1;
+    }
+
     function getFund(uint id) public view returns  (address, uint ) {
         return (funders[id].addr, funders[id].amount);
     }

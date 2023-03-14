@@ -6,8 +6,9 @@ contract Called{
 
     // 这是一个回退函数, 收到以太币会被调用
     receive() external payable {
-      emit logdata(msg.value);
-      total += msg.value;
+        emit logdata(msg.value);
+        // 
+        total += msg.value;
     }
 
     function getBalance() public view returns (uint) {
@@ -27,8 +28,8 @@ contract CallTest{
     }
 
     function saveTransferEth(address addr ) public {
-        (bool success, ) = addr.call{value: 1 ether}("");
-        require(success, 'TransferHelper::safeTransferETH: ETH transfer failed');
+        (bool success, ) = addr.call{value: 1 ether}(new bytes(0));
+        require(success, 'safeTransferETH: ETH transfer failed');
     }
 
 }

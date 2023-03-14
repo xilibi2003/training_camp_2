@@ -40,6 +40,7 @@ contract testArray {
         }
     }
 
+    // 移除元素推荐操作
     function remove(uint index) public {
         uint len = numbers.length;
         if (index == len - 1) {
