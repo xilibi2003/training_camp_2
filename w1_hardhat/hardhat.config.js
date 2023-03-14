@@ -7,7 +7,7 @@ dotenv.config({ path: "./.env" })
 
 const mnemonic = process.env.MNEMONIC
 const scankey = process.env.ETHERSCAN_API_KEY
-// const privateKey = process.env.PRIVATEKEY
+const PRIVATE_KEY1 = process.env.PRIVATEKEY
 
 /** @type import('hardhat/config').HardhatUserConfig */
 module.exports = {
@@ -21,7 +21,11 @@ module.exports = {
         mnemonic: mnemonic,
       },
     },
-
+    goerli: {
+      url: "https://eth-goerli.api.onfinality.io/public",
+      accounts: [PRIVATE_KEY1],
+      chainId: 5,
+    },
     mumbai: {
       url: "https://endpoints.omniatech.io/v1/matic/mumbai/public",
       accounts: {

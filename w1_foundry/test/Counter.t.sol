@@ -14,7 +14,9 @@ contract CounterTest is Test {
 
     function testIncrement() public {
         counter.increment();
-        assertEq(counter.counter(), 1);
+        uint x = counter.counter();
+        console2.log("x= %d", x);
+        assertEq(x, 1);
     }
 
     function testSetNumber(uint256 x) public {

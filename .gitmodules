@@ -1,0 +1,5 @@
+[submodule "w1_foundry/lib/forge-std"]
+	path = w1_foundry/lib/forge-std
+	url = https://github.com/forge/forge-std
+[submodule "lib/forge-std"]
+	branch = v1.5.1
