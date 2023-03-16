@@ -1,6 +1,6 @@
 pragma solidity ^0.8.0;
 
-contract testFunc {
+contract testModifier {
 
     address public owner;
     uint private deposited = 0;
