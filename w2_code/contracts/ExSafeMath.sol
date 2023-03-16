@@ -10,7 +10,7 @@ library ExSafeMath {
     }
 }
 
-contract TestExLib {
+contract TestExSafeMath {
     using ExSafeMath for uint;
 
     function testAdd(uint x, uint y) public pure returns (uint) {
