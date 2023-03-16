@@ -4,7 +4,7 @@ pragma solidity ^0.8.0;
 
 contract Bank {
     mapping(address => uint) public deposits;
-    bool public locked;
+    uint private locked;
 
     function deposit() public payable {
         deposits[msg.sender] += msg.value;
@@ -23,15 +23,15 @@ contract Bank {
     }
 
     modifier noReentrancy() {
-        require(!locked, "No reentrancy");
+        require(locked == 0, "No reentrancy");
 
-        locked = true;
+        locked = 1;
         _;
-        locked = false;
+        locked = 0;
     }
 }
 
-contract ContractB {
+contract AttackBank {
     Bank public bank;
 
     constructor(address _a) {
