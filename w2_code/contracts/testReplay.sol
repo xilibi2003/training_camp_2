@@ -2,9 +2,9 @@
 pragma solidity ^0.8.0;
 
 
-contract TestReplay {
+contract Bank {
     mapping(address => uint) public deposits;
-    bool public locked;
+    uint private locked;
 
     function deposit() public payable {
         deposits[msg.sender] += msg.value;
@@ -23,32 +23,32 @@ contract TestReplay {
     }
 
     modifier noReentrancy() {
-        require(!locked, "No reentrancy");
+        require(locked == 0, "No reentrancy");
 
-        locked = true;
+        locked = 1;
         _;
-        locked = false;
+        locked = 0;
     }
 }
 
-contract ContractB {
-    TestReplay public a;
+contract AttackBank {
+    Bank public bank;
 
     constructor(address _a) {
-        a = TestReplay(_a);
+        bank = Bank(_a);
     }
 
     // 
     fallback() external payable {
-        if (address(a).balance >= 1 ether) {
-            a.withdraw();
+        if (address(bank).balance >= 1 ether) {
+            bank.withdraw();
         }
     }
 
     function attack() external payable {
         require(msg.value >= 1 ether);
-        a.deposit{value: 1 ether}();
-        a.withdraw();
+        bank.deposit{value: 1 ether}();
+        bank.withdraw();
     }
 
     function getBalance() public view returns (uint) {
