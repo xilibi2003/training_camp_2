@@ -33,13 +33,13 @@ module.exports = {
       chainId: 31337,
     },
 
-    mumbai: {
-      url: "https://endpoints.omniatech.io/v1/matic/mumbai/public",
-      accounts: {
-        mnemonic: mnemonic,
-      },
-      chainId: 80001,
-    },
+    // mumbai: {
+    //   url: "https://endpoints.omniatech.io/v1/matic/mumbai/public",
+    //   accounts: {
+    //     mnemonic: mnemonic,
+    //   },
+    //   chainId: 80001,
+    // },
   },
 
 
