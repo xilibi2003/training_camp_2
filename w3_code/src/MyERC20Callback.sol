@@ -9,7 +9,7 @@ interface TokenRecipient {
     function tokensReceived(address sender, uint amount) external returns (bool);
 }
 
-contract MyERC20 is ERC20 {
+contract MyERC20Callback is ERC20 {
     using Address for address;
 
     constructor() ERC20("MyERC20", "MyERC20") {
