@@ -6,7 +6,7 @@ import "openzeppelin-contracts/contracts/token/ERC20/ERC20.sol";
 import "openzeppelin-contracts/contracts/utils/Address.sol";
 
 interface TokenRecipient {
-    function tokensReceived(address sender, uint amount, bytes memory exData) external returns (bool);
+    function tokensReceived(address sender, uint amount) external returns (bool);
 }
 
 contract MyERC20 is ERC20 {
@@ -17,11 +17,11 @@ contract MyERC20 is ERC20 {
     }
 
 
-    function send(address recipient, uint256 amount, bytes calldata exData) external returns (bool) {
+    function transferWithCallback(address recipient, uint256 amount) external returns (bool) {
         _transfer(msg.sender, recipient, amount);
 
         if (recipient.isContract()) {
-            bool rv = TokenRecipient(recipient).tokensReceived(msg.sender, amount, exData);
+            bool rv = TokenRecipient(recipient).tokensReceived(msg.sender, amount);
             require(rv, "No tokensReceived");
         }
 

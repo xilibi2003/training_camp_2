@@ -1,0 +1,16 @@
+{
+    "title": "集训营二期学员卡",
+    "description": "登链集训营二期 —— 最系统、最实用区块链技术训练营。",
+    "image": "ipfs://QmRfNpwAADG3t89vc8GVmZdYZXGCwgHNJc1qmjJzxFK8uQ",
+    "attributes": [
+        {
+            "trait_type": "学号",
+            "value": "02001"
+        },
+        {
+            "trait_type": "昵称",
+            "value": "V神"
+        }
+    ],
+    "version": "2"
+}

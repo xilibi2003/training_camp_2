@@ -17,8 +17,10 @@ forge test
 forge script
 
 ```
-forge script script/xxx.sol --rpc-url local --broadcast
+forge script script/MyERC20.s.sol --rpc-url local --broadcast --verify
 ```
+
+0x21b4d1f6d42dc6083db848d42aa4b6895371e1e7
 
 
 ```
@@ -43,5 +45,10 @@ anvil --port <PORT>
 anvil -m "test test test test test test test test test test test junk"
 
 ```
+
+## NFT  
+
+https://www.pinata.cloud/
+
 
 
