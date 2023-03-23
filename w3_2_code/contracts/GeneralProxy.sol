@@ -76,6 +76,7 @@ contract GeneralProxy  {
     }
 
     fallback() external payable {
+        // require(msg.sender != admin);
         _fallback();
     }
 
@@ -93,6 +94,7 @@ contract GeneralProxy  {
     }
 
     function upgradeTo(address _implementation) external {
+        // if (msg.sender != admin) revert();
         _setImplementation(_implementation);
     }
 
