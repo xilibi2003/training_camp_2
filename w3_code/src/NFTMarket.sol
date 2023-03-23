@@ -34,7 +34,7 @@ contract NFTMarket is IERC721Receiver{
 
 
     function buy(uint tokenId, uint amount) external {
-      require(tokenId != 0, "invalid token");
+      // require(tokenId != 0, "invalid token");
       require(amount >= tokenIdPrice[tokenId], "low price");
 
       require(IERC721(nftToken).ownerOf(tokenId) == address(this), "aleady selled");

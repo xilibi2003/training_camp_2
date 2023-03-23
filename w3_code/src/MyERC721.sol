@@ -10,6 +10,8 @@ contract MyERC721 is ERC721URIStorage {
     constructor() ERC721(unicode"集训营二期学员卡", "CAMP2") {}
 
     //  QmZNFPwox146ohY93ViFD8omSThRAVYF1A96MNHbWoa2Nr
+
+    // ipfs://QmT4YDZ2dgTSpfHwPndnSuvHrAXNvtDBKNDUwN8nuZiVHT
     function mint(address student, string memory tokenURI)
         public
         returns (uint256)
