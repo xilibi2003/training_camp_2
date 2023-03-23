@@ -1,0 +1,12 @@
+[
+  "event InterfaceImplementerSet(address indexed,bytes32 indexed,address indexed)",
+  "event ManagerChanged(address indexed,address indexed)",
+  "function getInterfaceImplementer(address,bytes32) view returns (address)",
+  "function getManager(address) view returns (address)",
+  "function implementsERC165Interface(address,bytes4) view returns (bool)",
+  "function implementsERC165InterfaceNoCache(address,bytes4) view returns (bool)",
+  "function interfaceHash(string) pure returns (bytes32)",
+  "function setInterfaceImplementer(address,bytes32,address)",
+  "function setManager(address,address)",
+  "function updateERC165Cache(address,bytes4)"
+]
