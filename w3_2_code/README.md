@@ -30,3 +30,8 @@ let b = await ethers.provider.getBalance("0xe74c813e3f545122e88A72FB1dF94052F93B
 b
 ```
 
+
+### 启动前端
+```
+npm run dev
+```

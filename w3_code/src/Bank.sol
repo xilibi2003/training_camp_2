@@ -21,7 +21,7 @@ contract Bank is TokenRecipient{
 
     constructor(address _token) {
         token = _token;
-        erc1820.setInterfaceImplementer(address(this), TOKENS_RECIPIENT_INTERFACE_HASH, address(this));
+        // erc1820.setInterfaceImplementer(address(this), TOKENS_RECIPIENT_INTERFACE_HASH, address(this));
         
     }
 

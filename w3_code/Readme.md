@@ -17,6 +17,10 @@ forge test
 forge script
 
 ```
+forge script script/ERC2612.s.sol --rpc-url local --broadcast
+```
+
+```
 forge script script/MyERC20.s.sol --rpc-url local --broadcast --verify
 ```
 
