@@ -1,27 +1,66 @@
-// We require the Hardhat Runtime Environment explicitly here. This is optional
-// but useful for running the script in a standalone fashion through `node <script>`.
-//
-// You can also run a script with `npx hardhat run <script>`. If you do that, Hardhat
-// will compile your contracts, add the Hardhat Runtime Environment's members to the
-// global scope, and execute the script.
+
 const hre = require("hardhat");
 
+async function doPermit(erc2612) {
+  const [owner, otherAccount] = await ethers.getSigners();
+
+  const nonce = await erc2612.nonces(owner.address);
+  const deadline = Math.ceil(Date.now() / 1000) + 60 * 60 * 24;
+  const chainID = (await ethers.provider.getNetwork()).chainId;
+  
+  let amount =  ethers.utils.parseUnits("1").toString();
+
+  const domain = {
+      name: 'ERC2612', version: '1', chainId: chainID, verifyingContract: erc2612.address
+  }
+
+  const types = {
+      Permit: [
+        {name: "owner", type: "address"},
+        {name: "spender", type: "address"},
+        {name: "value", type: "uint256"},
+        {name: "nonce", type: "uint256"},
+        {name: "deadline", type: "uint256"}
+      ]
+  };
+
+  const message = {
+      owner: owner.address,
+      spender: otherAccount.address,
+      value: amount,
+      nonce: nonce,
+      deadline: deadline
+  };
+
+  const signature = await owner._signTypedData(domain, types, message);
+  const {v, r, s} = ethers.utils.splitSignature(signature);
+
+  let tx = await erc2612.permit(
+    owner.address,
+    otherAccount.address,
+    amount,
+    deadline,
+    v,
+    r,
+    s
+    );
+
+  let allowanced = await erc2612.allowance(owner.address, otherAccount.address);
+  console.log("allowanced:" + allowanced);
+}
+
 async function main() {
-  const currentTimestampInSeconds = Math.round(Date.now() / 1000);
-  const unlockTime = currentTimestampInSeconds + 60;
 
-  const lockedAmount = hre.ethers.utils.parseEther("0.001");
+  const ERC2612 = await hre.ethers.getContractFactory("ERC2612");
+  const erc2612 = await ERC2612.deploy();
 
-  const Lock = await hre.ethers.getContractFactory("Lock");
-  const lock = await Lock.deploy(unlockTime, { value: lockedAmount });
+  await erc2612.deployed();
 
-  await lock.deployed();
+  console.log("token deployed finish address " + erc2612.address)
 
-  console.log(
-    `Lock with ${ethers.utils.formatEther(
-      lockedAmount
-    )}ETH and unlock timestamp ${unlockTime} deployed to ${lock.address}`
-  );
+
+  await doPermit(erc2612);
+
 }
 
 // We recommend this pattern to be able to use async/await everywhere
