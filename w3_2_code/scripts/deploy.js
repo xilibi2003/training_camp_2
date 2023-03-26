@@ -11,7 +11,10 @@ async function doPermit(erc2612) {
   let amount =  ethers.utils.parseUnits("1").toString();
 
   const domain = {
-      name: 'ERC2612', version: '1', chainId: chainID, verifyingContract: erc2612.address
+      name: 'ERC2612',
+      version: '1',
+      chainId: chainID,
+      verifyingContract: erc2612.address
   }
 
   const types = {
