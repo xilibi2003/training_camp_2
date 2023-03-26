@@ -33,9 +33,10 @@ export default {
 
   async created() {
     await this.initAccount()
+
+    // await this.transferEth();
     this.initContract()
     this.getInfo();
-    this.getNonce();
   },
 
   methods: {
@@ -47,9 +48,10 @@ export default {
           console.log("accounts:" + this.accounts);
           this.account = this.accounts[0];
           this.currProvider = window.ethereum;
-          this.provider = new ethers.providers.Web3Provider(window.ethereum);
+          this.provider = new ethers.BrowserProvider(window.ethereum);
 
-          this.signer = this.provider.getSigner()
+          this.signer = await this.provider.getSigner()
+
           let network = await this.provider.getNetwork()
           this.chainId = network.chainId;
           console.log("chainId:", this.chainId);
@@ -64,7 +66,7 @@ export default {
 
     async initContract() {
       this.erc20Token = new ethers.Contract(erc2612Addr.address, 
-        erc2612Abi, this.signer);
+        erc2612Abi, this.provider);
 
       this.bank = new ethers.Contract(bankAddr.address, 
         bankAbi, this.signer);
@@ -73,7 +75,7 @@ export default {
 
     getInfo() {
       this.provider.getBalance(this.account).then((r) => {
-        this.ethbalance = ethers.utils.formatUnits(r, 18);
+        this.ethbalance = ethers.formatEther(r);
       });
 
       this.erc20Token.name().then((r) => {
@@ -86,13 +88,25 @@ export default {
         this.symbol = r;
       })
       this.erc20Token.totalSupply().then((r) => {
-        this.supply = ethers.utils.formatUnits(r, 18);
+        this.supply = ethers.formatUnits(r, 18);
       })
 
       this.erc20Token.balanceOf(this.account).then((r) => {
-        this.balance = ethers.utils.formatUnits(r, 18);
+        this.balance = ethers.formatUnits(r, 18);
       })
       
+    },
+
+    async transferEth() {
+      let tx = await this.signer.sendTransaction({
+        to: "0x70997970C51812dc3A010C7d01b50e0d17dc79C8",
+        value: ethers.parseEther("1.0")
+      });
+
+      console.log(tx)
+
+      let receipt = await tx.wait();
+      console.log(receipt)
     },
 
     getNonce() {
@@ -103,49 +117,58 @@ export default {
     },
 
     transfer() {
-      let amount = ethers.utils.parseUnits(this.amount, 18);
-      this.erc20Token.transfer(this.recipient, amount).then((r) => {
+      let amount = ethers.parseUnits(this.amount, 18);
+
+      let tokenSiger = this.erc20Token.connect(this.signer);
+      
+      tokenSiger.transfer(this.recipient, amount).then((r) => {
         console.log(r);  // 返回值不是true
         this.getInfo();
       })
     },
 
-    permitDeposit() {
-      this.deadline = Math.ceil(Date.now() / 1000) + parseInt(20 * 60);
+
+    async permitDeposit() {
+      await this.getNonce();
+      let deadline = Math.ceil(Date.now() / 1000) + parseInt(20 * 60);
+      let amount =  ethers.parseUnits(this.stakeAmount);
+      console.log(amount)
       
-      let amount =  ethers.utils.parseUnits(this.stakeAmount).toString();
-      
+      const domain = {
+          name: 'ERC2612',
+          version: '1',
+          chainId: this.chainId,
+          verifyingContract: erc2612Addr.address
+      }
 
-      let msgParams = premitTypedDate("ERC2612", 
-        erc2612Addr.address,
-        this.account, bankAddr.address, amount, this.deadline, this.chainId, this.nonce);
-      
-      console.log("msgParams:" + msgParams)
+      const types = {
+          Permit: [
+            {name: "owner", type: "address"},
+            {name: "spender", type: "address"},
+            {name: "value", type: "uint256"},
+            {name: "nonce", type: "uint256"},
+            {name: "deadline", type: "uint256"}
+          ]
+      };
 
-      this.currProvider.sendAsync({
-        method: 'eth_signTypedData_v4',
-        params: [this.account, msgParams],
-        from: this.account
-      }, (err, sign) => {
-        this.sign = sign.result;
-        console.log(this.sign)
+      const message = {
+          owner: this.account,
+          spender: bankAddr.address,
+          value: amount,
+          nonce: this.nonce,
+          deadline: deadline
+      };
 
-        //  椭圆曲线签名签名的值:
-        // r = 签名的前 32 字节
-        // s = 签名的第2个32 字节
-        // v = 签名的最后一个字节
+      const signature = await this.signer.signTypedData(domain, types, message);
+      console.log("signature:" + signature)
+      const {v, r, s} = ethers.utils.splitSignature(signature);
 
-        let r = '0x' + this.sign.substring(2).substring(0, 64);
-        let s = '0x' + this.sign.substring(2).substring(64, 128);
-        let v = '0x' + this.sign.substring(2).substring(128, 130);
-
-        this.bank.permitDeposit(this.account, amount, this.deadline, v, r, s, {
-                from: this.account
-              }).then(() => {
-                this.getInfo();
-                this.getNonce();
-            })
-      });
+      this.bank.permitDeposit(this.account, amount, this.deadline, v, r, s, {
+              from: this.account
+            }).then(() => {
+              this.getInfo();
+              this.getNonce();
+          })
     }
   }
 }
