@@ -1,28 +1,33 @@
-# vue-project
+# w4-vue
 
-This template should help get you started developing with Vue 3 in Vite.
-
-## Recommended IDE Setup
-
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=johnsoncodehk.volar) (and disable Vetur) + [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=johnsoncodehk.vscode-typescript-vue-plugin).
-
-## Customize configuration
-
-See [Vite Configuration Reference](https://vitejs.dev/config/).
-
-## Project Setup
+## 安装依赖
 
 ```sh
 npm install
 ```
 
-### Compile and Hot-Reload for Development
+## 合约部署
+使用w3_code 中的合约
+
+```
+forge script script/ERC2612.s.sol --rpc-url local --broadcast
+forge script script/Bank.s.sol --rpc-url local --broadcast
+```
+
+若使用默认的助记词，则生成的ERC262的地址是：0x5FbDB2315678afecb367f032d93F642f64180aa3
+
+Bank地址是：0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512
+
+若你部署后的地址不一样，请修改 /deployments/dev/ERC2612.json 及  /deployments/dev/Bank.json
+
+
+## 启动前端
 
 ```sh
 npm run dev
 ```
 
-### Compile and Minify for Production
+## Compile and Minify for Production
 
 ```sh
 npm run build
