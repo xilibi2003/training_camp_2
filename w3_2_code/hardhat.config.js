@@ -5,6 +5,7 @@ let dotenv = require('dotenv')
 dotenv.config({ path: "./.env" })
 
 const mnemonic = process.env.MNEMONIC
+const ethercankey = process.env.ETHERSCAN_API_KEY
 
 /** @type import('hardhat/config').HardhatUserConfig */
 module.exports = {
@@ -25,5 +26,11 @@ module.exports = {
       },
       chainId: 80001,
     },
+  },
+
+  etherscan: {
+    apiKey: {
+      polygonMumbai: ethercankey
+    }
   }
 };
