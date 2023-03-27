@@ -7,8 +7,6 @@ import erc2612Abi from '../../deployments/abi/ERC2612.json'
 import bankAddr from '../../deployments/dev/Bank.json'
 import bankAbi from '../../deployments/abi/Bank.json'
 
-import { premitTypedDate } from "../typedData.js";
-
 export default {
 
   name: 'erc20',
@@ -42,12 +40,13 @@ export default {
     async initAccount(){
       if(window.ethereum) {
         console.log("initAccount");
-        try{
-          this.accounts = await window.ethereum.enable()
-          console.log("accounts:" + this.accounts);
-          this.account = this.accounts[0];
+        try {
           this.currProvider = window.ethereum;
           this.provider = new ethers.providers.Web3Provider(window.ethereum);
+          this.accounts = await this.provider.send("eth_requestAccounts", []);
+
+          console.log("accounts:" + this.accounts);
+          this.account = this.accounts[0];
 
           this.signer = this.provider.getSigner()
           let network = await this.provider.getNetwork()
@@ -110,43 +109,47 @@ export default {
       })
     },
 
-    permitDeposit() {
+    async permitDeposit() {
       this.deadline = Math.ceil(Date.now() / 1000) + parseInt(20 * 60);
       
       let amount =  ethers.utils.parseUnits(this.stakeAmount).toString();
       
+      const domain = {
+          name: 'ERC2612',
+          version: '1',
+          chainId: this.chainId,
+          verifyingContract: erc2612Addr.address
+      }
 
-      let msgParams = premitTypedDate("ERC2612", 
-        erc2612Addr.address,
-        this.account, bankAddr.address, amount, this.deadline, this.chainId, this.nonce);
-      
-      console.log("msgParams:" + msgParams)
+      const types = {
+          Permit: [
+            {name: "owner", type: "address"},
+            {name: "spender", type: "address"},
+            {name: "value", type: "uint256"},
+            {name: "nonce", type: "uint256"},
+            {name: "deadline", type: "uint256"}
+          ]
+      }
 
-      this.currProvider.sendAsync({
-        method: 'eth_signTypedData_v4',
-        params: [this.account, msgParams],
-        from: this.account
-      }, (err, sign) => {
-        this.sign = sign.result;
-        console.log(this.sign)
+      const message = {
+          owner: this.account,
+          spender: bankAddr.address,
+          value: amount,
+          nonce: this.nonce,
+          deadline: this.deadline
+      }
 
-        //  椭圆曲线签名签名的值:
-        // r = 签名的前 32 字节
-        // s = 签名的第2个32 字节
-        // v = 签名的最后一个字节
+      const signature = await this.signer._signTypedData(domain, types, message);
+      console.log(signature);
 
-        let r = '0x' + this.sign.substring(2).substring(0, 64);
-        let s = '0x' + this.sign.substring(2).substring(64, 128);
-        let v = '0x' + this.sign.substring(2).substring(128, 130);
-
-        this.bank.permitDeposit(this.account, amount, this.deadline, v, r, s, {
-                from: this.account
-              }).then(() => {
-                this.getInfo();
-                this.getNonce();
-            })
-      });
-    }
+      const {v, r, s} = ethers.utils.splitSignature(signature);
+      this.bank.permitDeposit(this.account, amount, this.deadline, v, r, s, {
+              from: this.account
+            }).then(() => {
+              this.getInfo();
+              this.getNonce();
+          })
+    },
   }
 }
 
