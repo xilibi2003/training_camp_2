@@ -46,19 +46,19 @@ npm run build
 ## JOSN_RPC 向节点发起请求
 
 ```
-curl -X POST --data '{"jsonrpc":"2.0","method":"eth_getBalance","params":["0xe74c813e3f545122e88A72FB1dF94052F93B808f", "latest"],"id":1}' http://127.0.0.1:8545
+curl -X POST --data '{"jsonrpc":"2.0","method":"eth_getBalance","params":["0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266", "latest"],"id":1}' http://127.0.0.1:8545
 ```
 
 
-
+balanceOf
 ```
 {
     "jsonrpc":"2.0",
     "method":"eth_call",
     "params":[
         {
-            "to":"0x86Fa049857E0209aa7D9e616F7eb3b3B78ECfdb0",
-            "data":"0x70a0823100000000000000000000000033b8287511ac7F003902e83D642Be4603afCd876"
+            "to":"0x5fbdb2315678afecb367f032d93f642f64180aa3",
+            "data":"0x70a08231000000000000000000000000f39Fd6e51aad88F6F4ce6aB8827279cffFb92266"
         },
         "latest"
     ],
@@ -67,11 +67,13 @@ curl -X POST --data '{"jsonrpc":"2.0","method":"eth_getBalance","params":["0xe74
 ```
 
 
+
+
 npx hardhat console:
 
 ```
 
-let b = await ethers.provider.getBalance("0xe74c813e3f545122e88A72FB1dF94052F93B808f")
+let b = await ethers.provider.getBalance("0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266")
 
 b
 ```

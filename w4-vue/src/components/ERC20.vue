@@ -158,10 +158,18 @@ export default {
       console.log(signature);
 
       const {v, r, s} = ethers.utils.splitSignature(signature);
-      let tx = await this.bank.permitDeposit(this.account, amount, this.deadline, v, r, s);
       
-      let receipt = await tx.wait();
-      this.readContract();
+      
+      try {
+        let tx = await this.bank.permitDeposit(this.account, amount, this.deadline, v, r, s);
+      
+        let receipt = await tx.wait();
+        this.readContract();
+      } catch (e) {
+        alert("Error , please check the console log:", e)
+      }
+      
+
 
     },
   }
