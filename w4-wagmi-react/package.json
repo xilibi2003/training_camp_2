@@ -1,0 +1,28 @@
+{
+  "name": "vite-react-web3modal",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "dev": "npm run wagmi && vite",
+    "build": "npm run wagmi && tsc && vite build",
+    "preview": "vite preview",
+    "wagmi": "wagmi generate"
+  },
+  "dependencies": {
+    "@wagmi/cli": "~0.1.5",
+    "buffer": "^6.0.3",
+    "ethers": "^5.7.2",
+    "process": "^0.11.10",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "util": "^0.12.4",
+    "wagmi": "~0.12.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.0.9",
+    "@types/react-dom": "^18.0.3",
+    "@vitejs/plugin-react": "^2.1.0",
+    "typescript": "^4.9.4",
+    "vite": "^3.1.8"
+  }
+}
