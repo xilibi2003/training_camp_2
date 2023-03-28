@@ -1,5 +1,6 @@
 require("@nomicfoundation/hardhat-toolbox");
 require('@openzeppelin/hardhat-upgrades');
+require('hardhat-abi-exporter');
 
 let dotenv = require('dotenv')
 dotenv.config({ path: "./.env" })
@@ -26,6 +27,15 @@ module.exports = {
       },
       chainId: 80001,
     },
+  },
+
+  abiExporter: {
+      path: './deployments/abi',
+      clear: true,
+      flat: true,
+      only: ["Bank", "ERC2612"],
+      spacing: 2,
+      pretty: true,
   },
 
   etherscan: {
