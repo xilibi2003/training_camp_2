@@ -10,8 +10,14 @@ npx hardhat test
 REPORT_GAS=true npx hardhat test
 npx hardhat node
 npx hardhat run scripts/deploy.js
+
 ```
 
+
+导出 ABI 文件:
+```
+npx hardhat export-abi
+```
 
 
 

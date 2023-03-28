@@ -25,40 +25,40 @@ export default {
       supply: null,
 
       stakeAmount: null,
-
     }
   },
 
   async created() {
+    await this.initProvider()
     await this.initAccount()
     this.initContract()
-    this.getInfo();
-    this.getNonce();
+    this.readContract();
+
   },
 
   methods: {
-    async initAccount(){
+    async initProvider(){
       if(window.ethereum) {
-        console.log("initAccount");
-        try {
-          this.currProvider = window.ethereum;
           this.provider = new ethers.providers.Web3Provider(window.ethereum);
-          this.accounts = await this.provider.send("eth_requestAccounts", []);
-
-          console.log("accounts:" + this.accounts);
-          this.account = this.accounts[0];
-
-          this.signer = this.provider.getSigner()
           let network = await this.provider.getNetwork()
           this.chainId = network.chainId;
           console.log("chainId:", this.chainId);
 
+      } else{
+        console.log("Need install MetaMask")
+      }
+    },
+
+    async initAccount(){
+        try {
+          this.accounts = await this.provider.send("eth_requestAccounts", []);
+          console.log("accounts:" + this.accounts);
+          this.account = this.accounts[0];
+
+          this.signer = this.provider.getSigner()
         } catch(error){
           console.log("User denied account access", error)
         }
-      }else{
-        console.log("Need install MetaMask")
-      }
     },
 
     async initContract() {
@@ -70,7 +70,7 @@ export default {
 
     }, 
 
-    getInfo() {
+    readContract() {
       this.provider.getBalance(this.account).then((r) => {
         this.ethbalance = ethers.utils.formatUnits(r, 18);
       });
@@ -94,22 +94,30 @@ export default {
       
     },
 
-    getNonce() {
-      this.erc20Token.nonces(this.account).then(r => {
-        this.nonce = r.toString();
-        console.log("nonce:" + this.nonce);
-      })
-    },
+
+    // async transferEth() {
+    //   let tx = await this.signer.sendTransaction({
+    //     to: "0x70997970C51812dc3A010C7d01b50e0d17dc79C8",
+    //     value: ethers.parseEther("1.0")
+    //   });
+
+    //   console.log(tx)
+
+    //   let receipt = await tx.wait();
+    //   console.log(receipt)
+    // },
+
 
     transfer() {
       let amount = ethers.utils.parseUnits(this.amount, 18);
       this.erc20Token.transfer(this.recipient, amount).then((r) => {
         console.log(r);  // 返回值不是true
-        this.getInfo();
+        this.readContract();
       })
     },
 
     async permitDeposit() {
+      let nonce = await this.erc20Token.nonces(this.account);
       this.deadline = Math.ceil(Date.now() / 1000) + parseInt(20 * 60);
       
       let amount =  ethers.utils.parseUnits(this.stakeAmount).toString();
@@ -135,7 +143,7 @@ export default {
           owner: this.account,
           spender: bankAddr.address,
           value: amount,
-          nonce: this.nonce,
+          nonce: nonce,
           deadline: this.deadline
       }
 
@@ -143,12 +151,11 @@ export default {
       console.log(signature);
 
       const {v, r, s} = ethers.utils.splitSignature(signature);
-      this.bank.permitDeposit(this.account, amount, this.deadline, v, r, s, {
-              from: this.account
-            }).then(() => {
-              this.getInfo();
-              this.getNonce();
-          })
+      let tx = await this.bank.permitDeposit(this.account, amount, this.deadline, v, r, s);
+      
+      let receipt = await tx.wait();
+      this.readContract();
+
     },
   }
 }
@@ -160,21 +167,21 @@ export default {
   <div >
 
       <div>
-        <br /> Token名称 : {{ name  }}
-        <br /> Token符号 : {{  symbol }}
-        <br /> Token精度 : {{  decimal }}
-        <br /> Token发行量 : {{  supply }}
-        <br /> 我的Token余额 : {{ balance  }}
+        <br /> Token 名称 : {{ name  }}
+        <br /> Token 符号 : {{  symbol }}
+        <br /> Token 精度 : {{  decimal }}
+        <br /> Token 发行量 : {{  supply }}
+        <br /> 我的 Token 余额 : {{ balance  }}
         <br /> 我的ETH余额 : {{ ethbalance  }}
       </div>
 
       <div >
         <br />转账到:
-        <input type="text" v-model="recipient" />
+        <input type="text" v-model="目标地址" />
         <br />转账金额
-        <input type="text" v-model="amount" />
+        <input type="text" v-model="数量" />
         <br />
-        <button @click="transfer()"> 转账 </button>
+        <button @click="transfer"> 转账 </button>
       </div>
 
     <div >
