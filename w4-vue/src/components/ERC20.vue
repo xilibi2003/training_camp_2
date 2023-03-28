@@ -13,7 +13,7 @@ export default {
 
   data() {
     return {
-
+      account: null,
       recipient: null,
       amount: null,
       balance: null,
@@ -29,14 +29,21 @@ export default {
   },
 
   async created() {
-    await this.initProvider()
-    await this.initAccount()
-    this.initContract()
-    this.readContract();
-
   },
 
   methods: {
+    async connect() {
+      await this.initProvider()
+      await this.initAccount()
+
+      // 如果获取到了账号,进行合约初始化，并读取合约数据
+      if (this.account) {
+        this.initContract()
+        this.readContract();
+      }
+
+    },
+
     async initProvider(){
       if(window.ethereum) {
           this.provider = new ethers.providers.Web3Provider(window.ethereum);
@@ -57,7 +64,7 @@ export default {
 
           this.signer = this.provider.getSigner()
         } catch(error){
-          console.log("User denied account access", error)
+            console.log("User denied account access", error)
         }
     },
 
@@ -166,6 +173,10 @@ export default {
 <template>
   <div >
 
+    <button @click="connect"> 链接钱包 </button>
+    <div>
+    我的地址 : {{  account }}
+  </div>
       <div>
         <br /> Token 名称 : {{ name  }}
         <br /> Token 符号 : {{  symbol }}
