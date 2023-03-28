@@ -188,9 +188,9 @@ export default {
 
       <div >
         <br />转账到:
-        <input type="text" v-model="目标地址" />
+        <input type="text" v-model="recipient" />
         <br />转账金额
-        <input type="text" v-model="数量" />
+        <input type="text" v-model="amount" />
         <br />
         <button @click="transfer"> 转账 </button>
       </div>
