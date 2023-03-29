@@ -22,7 +22,7 @@ module.exports = {
       // },
     },
     mumbai: {
-      url: "https://endpoints.omniatech.io/v1/matic/mumbai/public",
+      url: "https://polygon-mumbai.blockpi.network/v1/rpc/public",
       accounts: {
         mnemonic: mnemonic,
       },

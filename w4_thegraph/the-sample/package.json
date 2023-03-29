@@ -1,0 +1,18 @@
+{
+  "name": "the-sample",
+  "license": "UNLICENSED",
+  "scripts": {
+    "codegen": "graph codegen",
+    "build": "graph build",
+    "deploy": "graph deploy --node https://api.thegraph.com/deploy/ xilibi2003/the-sample",
+    "create-local": "graph create --node http://localhost:8020/ xilibi2003/the-sample",
+    "remove-local": "graph remove --node http://localhost:8020/ xilibi2003/the-sample",
+    "deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 xilibi2003/the-sample",
+    "test": "graph test"
+  },
+  "dependencies": {
+    "@graphprotocol/graph-cli": "0.44.0",
+    "@graphprotocol/graph-ts": "0.29.1"
+  },
+  "devDependencies": { "matchstick-as": "0.5.0" }
+}
