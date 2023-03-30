@@ -1,10 +1,10 @@
 <script>
 import { ethers } from 'ethers'
 
-import erc2612Addr from '../../deployments/dev/ERC2612.json'
+import erc2612Addr from '../../deployments/mumbai/ERC2612.json'
 import erc2612Abi from '../../deployments/abi/ERC2612.json'
 
-import bankAddr from '../../deployments/dev/Bank.json'
+import bankAddr from '../../deployments/mumbai/Bank.json'
 import bankAbi from '../../deployments/abi/Bank.json'
 
 export default {
@@ -167,11 +167,8 @@ export default {
     我的地址 : {{  account }}
   </div>
       <div>
-        <br /> Token 名称 : {{ name  }}
-        <br /> Token 符号 : {{  symbol }}
-        <br /> Token 精度 : {{  decimal }}
-        <br /> Token 发行量 : {{  supply }}
-        <br /> 我的 Token 余额 : {{ balance  }}
+        <br /> Token 名称 : {{ name  }} , Token 符号 : {{  symbol }} ,  Token 精度 : {{  decimal }}
+        <br /> Token 发行量 : {{  supply }} , 我的 Token 余额 : {{ balance  }}
         <br /> 我的ETH余额 : {{ ethbalance  }}
       </div>
 
@@ -183,11 +180,6 @@ export default {
         <br />
         <button @click="transfer"> 转账 </button>
       </div>
-
-    <div >
-      <input v-model="stakeAmount" placeholder="输入质押量"/>
-      <button @click="permitDeposit">离线授权存款</button>
-    </div>
 
   </div>
 </template>
