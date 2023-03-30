@@ -12,7 +12,9 @@ This template demonstrates usage of the [`@wagmi/cli` ERC Plugin](https://wagmi.
 
 # Getting Started
 
-Run `npm run dev` in your terminal, and then open [localhost:5173](http://localhost:5173) in your browser.
+Run `npm run dev` 
+
+[localhost:5173](http://localhost:5173) in your browser.
 
 This command will also generate ERC20 + ERC721 React Hooks (via `npm run wagmi`) for you to use in your project.
 

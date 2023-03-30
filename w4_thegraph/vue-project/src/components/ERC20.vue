@@ -10,7 +10,6 @@ import bankAbi from '../../deployments/abi/Bank.json'
 export default {
 
   name: 'erc20',
-
   data() {
     return {
       account: null,
@@ -25,13 +24,6 @@ export default {
       supply: null,
 
       stakeAmount: null,
-<<<<<<< HEAD
-<<<<<<<< HEAD:w4-vue/src/components/ERC20.vue
-========
-      transfers: null,
->>>>>>>> main:w4_thegraph/vue-project/src/components/ERC20.vue
-=======
->>>>>>> main
     }
   },
 
@@ -48,14 +40,6 @@ export default {
         this.initContract()
         this.readContract();
       }
-<<<<<<< HEAD
-<<<<<<<< HEAD:w4-vue/src/components/ERC20.vue
-
-========
->>>>>>>> main:w4_thegraph/vue-project/src/components/ERC20.vue
-=======
-
->>>>>>> main
     },
 
     async initProvider(){
@@ -115,19 +99,6 @@ export default {
       
     },
 
-
-    // async transferEth() {
-    //   let tx = await this.signer.sendTransaction({
-    //     to: "0x70997970C51812dc3A010C7d01b50e0d17dc79C8",
-    //     value: ethers.parseEther("1.0")
-    //   });
-
-    //   console.log(tx)
-
-    //   let receipt = await tx.wait();
-    //   console.log(receipt)
-    // },
-
     transfer() {
       let amount = ethers.utils.parseUnits(this.amount, 18);
       this.erc20Token.transfer(this.recipient, amount).then((r) => {
@@ -180,7 +151,7 @@ export default {
       } catch (e) {
         alert("Error , please check the console log:", e)
       }
-      
+
     },
   }
 }

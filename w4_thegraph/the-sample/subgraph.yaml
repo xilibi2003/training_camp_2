@@ -1,0 +1,25 @@
+specVersion: 0.0.5
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum
+    name: ERC2612
+    network: mumbai
+    source:
+      address: "0x562C00463801C9E3815d68A76DAB9940d8f8dFed"
+      abi: ERC2612
+      startBlock: 33703557
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - Transfer
+        - User
+      abis:
+        - name: ERC2612
+          file: ./abis/ERC2612.json
+      eventHandlers:
+        - event: Transfer(indexed address,indexed address,uint256)
+          handler: handleTransfer
+      file: ./src/erc-2612.ts
