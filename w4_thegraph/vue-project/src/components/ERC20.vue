@@ -1,10 +1,10 @@
 <script>
 import { ethers } from 'ethers'
 
-import erc2612Addr from '../../deployments/dev/ERC2612.json'
+import erc2612Addr from '../../deployments/mumbai/ERC2612.json'
 import erc2612Abi from '../../deployments/abi/ERC2612.json'
 
-import bankAddr from '../../deployments/dev/Bank.json'
+import bankAddr from '../../deployments/mumbai/Bank.json'
 import bankAbi from '../../deployments/abi/Bank.json'
 
 export default {
