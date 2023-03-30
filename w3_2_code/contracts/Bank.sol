@@ -3,6 +3,7 @@ pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts/token/ERC20/extensions/draft-IERC20Permit.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 
 interface TokenRecipient {
     function tokensReceived(address sender, uint amount) external returns (bool);
@@ -47,6 +48,12 @@ contract Bank is TokenRecipient{
         require(msg.sender == token, "invalid");
         deposited[sender] += amount;
         return true;
+    }
+
+    function withdraw() external {
+        uint amount = deposited[msg.sender];
+        SafeERC20.safeTransfer(IERC20(token), msg.sender, amount);
+        deposited[msg.sender] = 0;
     }
 
 
