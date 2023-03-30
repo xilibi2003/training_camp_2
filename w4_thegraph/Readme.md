@@ -111,3 +111,26 @@ graph deploy --product hosted-service xilibi2003/the-sample
 
 
 https://api.thegraph.com/subgraphs/name/xilibi2003/the-sample
+
+
+## 查询
+文档：
+https://thegraph.com/docs/zh/querying/graphql-api/
+
+按余额查询：
+```
+{
+  users(orderBy: balance orderDirection:desc) {
+    id
+    balance
+  }
+}
+```
+
+按用户查询查询：
+{
+  users(where:{id: "0xe74c813e3f545122e88a72fb1df94052f93b808f" }) {
+    id
+    balance
+  }
+}
