@@ -25,13 +25,11 @@ export default {
       supply: null,
 
       stakeAmount: null,
-<<<<<<< HEAD
-<<<<<<<< HEAD:w4-vue/src/components/ERC20.vue
-========
-      transfers: null,
->>>>>>>> main:w4_thegraph/vue-project/src/components/ERC20.vue
-=======
->>>>>>> main
+      myDeposit: 0,
+      approveTo: null,
+      approveAmount: null,
+      approved: null,
+      bankAddress: bankAddr.address
     }
   },
 
@@ -47,15 +45,8 @@ export default {
       if (this.account) {
         this.initContract()
         this.readContract();
+        this.getApproved();
       }
-<<<<<<< HEAD
-<<<<<<<< HEAD:w4-vue/src/components/ERC20.vue
-
-========
->>>>>>>> main:w4_thegraph/vue-project/src/components/ERC20.vue
-=======
-
->>>>>>> main
     },
 
     async initProvider(){
@@ -112,31 +103,81 @@ export default {
       this.erc20Token.balanceOf(this.account).then((r) => {
         this.balance = ethers.utils.formatUnits(r, 18);
       })
-      
+
+      this.bank.deposited(this.account).then((r) => {
+        this.myDeposit = ethers.utils.formatUnits(r, 18);
+      })
+
     },
 
+    getApproved() {
+      this.erc20Token.allowance(this.account, this.bankAddress).then((r) => {
+        this.approved = ethers.utils.formatUnits(r, 18);
+      })
+    },
+    
 
     // async transferEth() {
     //   let tx = await this.signer.sendTransaction({
     //     to: "0x70997970C51812dc3A010C7d01b50e0d17dc79C8",
     //     value: ethers.parseEther("1.0")
     //   });
-
-    //   console.log(tx)
-
-    //   let receipt = await tx.wait();
-    //   console.log(receipt)
     // },
 
     transfer() {
+      if (!this.erc20Token) {
+        alert("先链接钱包")
+      }
       let amount = ethers.utils.parseUnits(this.amount, 18);
-      this.erc20Token.transfer(this.recipient, amount).then((r) => {
-        console.log(r);  // 返回值不是true
+      
+        this.erc20Token.transfer(this.recipient, amount).then((r) => {
+          console.log(r);  // 返回值不是true
+          this.readContract();
+        }).catch(e => {
+          alert("Error , please check the console log:", e)
+        })
+
+    },
+
+    async approve() {
+      if (!this.erc20Token) {
+        alert("先链接钱包")
+      }
+
+      try {
+        let amount = ethers.utils.parseUnits(this.approveAmount, 18);
+        let tx = await this.erc20Token.approve(this.approveTo, amount);
+        await tx.wait();
+        this.getApproved()
+      }
+      catch(e) {
+          alert("Error , please check the console log:", e)
+      }
+    },
+
+
+    async deposit() {
+      if (!this.bank) {
+        alert("先链接钱包")
+      }
+
+      try {
+        let amount = ethers.utils.parseUnits(this.approveAmount, 18);
+        let tx = await this.bank.deposit(this.account, amount);
+        await tx.wait();
+        this.getApproved();
         this.readContract();
-      })
+      }
+      catch(e) {
+          alert("Error , please check the console log:", e)
+      }
     },
 
     async permitDeposit() {
+      if (!this.erc20Token) {
+        alert("先链接钱包")
+      }
+
       let nonce = await this.erc20Token.nonces(this.account);
       this.deadline = Math.ceil(Date.now() / 1000) + parseInt(20 * 60);
       
@@ -174,7 +215,6 @@ export default {
       
       try {
         let tx = await this.bank.permitDeposit(this.account, amount, this.deadline, v, r, s);
-      
         let receipt = await tx.wait();
         this.readContract();
       } catch (e) {
@@ -182,6 +222,16 @@ export default {
       }
       
     },
+
+    async withdraw() {
+      if (!this.bank) {
+        alert("先链接钱包")
+      }
+
+      let tx = await this.bank.withdraw();
+      await tx.wait();
+      this.readContract();
+    }
   }
 }
 
@@ -195,28 +245,57 @@ export default {
     <div>
     我的地址 : {{  account }}
   </div>
-      <div>
-        <br /> Token 名称 : {{ name  }}
-        <br /> Token 符号 : {{  symbol }}
-        <br /> Token 精度 : {{  decimal }}
-        <br /> Token 发行量 : {{  supply }}
-        <br /> 我的 Token 余额 : {{ balance  }}
+      <div class="block">
+        Token 名称 : {{ name  }} , 
+        Token 符号 : {{  symbol }} , 
+        Token 精度 : {{  decimal }}
+        <br /> Token 发行量 : {{  supply }} , 我的 Token 余额 : {{ balance  }}
         <br /> 我的ETH余额 : {{ ethbalance  }}
       </div>
 
+      <div class="block">
+      <h3>普通转账:</h3>
       <div >
-        <br />转账到:
+        转账到:
         <input type="text" v-model="recipient" />
         <br />转账金额
         <input type="text" v-model="amount" />
         <br />
         <button @click="transfer"> 转账 </button>
       </div>
-
-    <div >
-      <input v-model="stakeAmount" placeholder="输入质押量"/>
-      <button @click="permitDeposit">离线授权存款</button>
     </div>
+    <div class="block">
+      <h3>授权 存款(两笔交易):</h3>
+      Bank合约地址：{{ bankAddress }}
+      <div v-if="approved" >已授权额度: {{ approved }}</div>
+
+      <div >
+        <br />授权到:
+        <input type="text" v-model="approveTo" />
+        <br />金额
+        <input type="text" v-model="approveAmount" />
+        <br />
+        
+        <button @click="approve"> 授权 </button>
+        <button @click="deposit"> 存款 </button>
+      </div>
+    </div>
+
+    <div class="block">
+      <h3>离线授权存款（一笔交易）</h3>
+      <div >
+        <input v-model="stakeAmount" placeholder="输入质押量"/>
+        <button @click="permitDeposit">离线授权存款</button>
+      </div>
+    </div>
+
+    <div class="block">
+      <h3> 取款</h3>
+      <div >
+      我的存款：{{ myDeposit }}
+      <button @click="withdraw">取款</button>
+    </div>
+  </div>
 
   </div>
 </template>
@@ -229,7 +308,8 @@ h1 {
 }
 
 h3 {
-  font-size: 1.2rem;
+  font-size: 1.4rem;
+  color: firebrick;
 }
 
 .greetings h1,
@@ -241,10 +321,10 @@ div {
   font-size: 1.2rem;
 }
 
-@media (min-width: 1024px) {
-  .greetings h1,
-  .greetings h3 {
-    text-align: left;
-  }
+.block {
+  margin: 5px;
+  padding: 5px;
+  border-style: solid;
+  border-width: 1px;
 }
 </style>

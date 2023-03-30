@@ -3,5 +3,6 @@
   "function deposit(address,uint256)",
   "function deposited(address) view returns (uint256)",
   "function permitDeposit(address,uint256,uint256,uint8,bytes32,bytes32)",
-  "function token() view returns (address)"
+  "function token() view returns (address)",
+  "function withdraw()"
 ]
