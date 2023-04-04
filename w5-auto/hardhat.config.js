@@ -22,7 +22,9 @@ module.exports = {
     },
     goerli: {
       url: "https://eth-goerli.api.onfinality.io/public",
-      accounts: [PRIVATE_KEY1],
+      accounts: {
+        mnemonic: mnemonic,
+      },
       chainId: 5,
     },
     mumbai: {

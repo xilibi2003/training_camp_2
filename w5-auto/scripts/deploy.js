@@ -20,6 +20,15 @@ async function main() {
   await writeAbiAddr(Artifact, counter.address, "Counter", network.name);
 
 
+  const CounterResolver = await ethers.getContractFactory("CounterResolver");
+
+  const resoler = await CounterResolver.deploy(counter.address);
+  await resoler.deployed();
+
+  let ResolverArtifact = await artifacts.readArtifact("CounterResolver");
+  await writeAbiAddr(ResolverArtifact, resoler.address, "CounterResolver", network.name);
+
+
 }
 
 main()
