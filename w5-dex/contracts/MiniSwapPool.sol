@@ -41,6 +41,7 @@ contract MiniSwapPool is ERC20 {
             _mint(msg.sender, INITIAL_SUPPLY);
         } else {
             uint currentSupply = totalSupply();
+
             uint newSupplyGivenReserve0Ratio = reserve0After * currentSupply / reserve0;
             uint newSupplyGivenReserve1Ratio = reserve1After * currentSupply / reserve1;
             uint newSupply = Math.min(newSupplyGivenReserve0Ratio, newSupplyGivenReserve1Ratio);
@@ -61,6 +62,8 @@ contract MiniSwapPool is ERC20 {
         assert(transfer(address(this), liquidity));
 
         uint currentSupply = totalSupply();
+
+        // 10 lp token  ; total 100;
         uint amount0 = liquidity * reserve0 / currentSupply;
         uint amount1 = liquidity * reserve1 / currentSupply;
 
