@@ -13,12 +13,16 @@ contract MyTokenMarket {
     address public myToken;
     address public router;
     address public weth;
-    address public masterchef;
+    address public sushi;
 
-    constructor(address _token, address _router, address _weth, address _masterchef) {
+    address public masterchef;
+    uint public depsited;
+
+    constructor(address _token, address _router, address _weth, address _sushi, address _masterchef) {
         myToken = _token;
         router = _router;
         weth = _weth;
+        sushi = _sushi;
         masterchef = _masterchef;
     }
 
@@ -43,9 +47,20 @@ contract MyTokenMarket {
         IUniswapV2Router01(router).swapExactETHForTokens{value : msg.value}(minTokenAmount, path, address(this), block.timestamp);
 
         uint amount = IERC20(myToken).balanceOf(address(this));
+
         IERC20(myToken).safeApprove(masterchef, amount);
 
-        IMasterChef(masterchef).deposit(1, amount);
+        IMasterChef(masterchef).deposit(0, amount);
+        depsited += amount;
+
+    }
+
+    function withdraw() public {
+        IMasterChef(masterchef).withdraw(0, depsited);
+        IERC20(myToken).safeTransfer(msg.sender, depsited);
+
+        uint amount = IERC20(sushi).balanceOf(address(this));
+        IERC20(sushi).safeTransfer(msg.sender, amount);
 
     }
 
