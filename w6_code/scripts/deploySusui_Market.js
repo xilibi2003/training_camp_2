@@ -36,6 +36,9 @@ async function main() {
     await deploySusui();
     await deployMasterChef();
 
+    let tx = await susui.transferOwnership(masterChef.address);
+    await tx.wait();
+
     let Token = await ethers.getContractFactory("Token");
     let aAmount = ethers.utils.parseUnits("100000", 18);
     let atoken = await Token.deploy(
@@ -47,7 +50,7 @@ async function main() {
     console.log("AToken:" + atoken.address);
 
 
-    let tx = await masterChef.add(100, atoken.address, true);
+    tx = await masterChef.add(100, atoken.address, true);
     await tx.wait();
 
 
