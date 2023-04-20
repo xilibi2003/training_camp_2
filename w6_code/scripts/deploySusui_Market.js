@@ -10,6 +10,8 @@ async function deploySusui() {
   let SushiToken = await ethers.getContractFactory("SushiToken");
   susui = await SushiToken.deploy()
   await susui.deployed();
+
+  console.log("susui:" + susui.address);
 }
 
 
@@ -17,12 +19,14 @@ async function deployMasterChef() {
   let MasterChef = await ethers.getContractFactory("MasterChef");
   let award = ethers.utils.parseUnits("40", 18);
 
-  let masterChef = await MasterChef.deploy(
+  masterChef = await MasterChef.deploy(
     susui.address, 
     award, 
     10
   )
   await masterChef.deployed();
+
+  console.log("masterChef:" + masterChef.address);
 }
 
 async function main() {
@@ -43,21 +47,20 @@ async function main() {
     console.log("AToken:" + atoken.address);
 
 
-
-
     let tx = await masterChef.add(100, atoken.address, true);
     await tx.wait();
 
 
     let MyTokenMarket = await ethers.getContractFactory("MyTokenMarket");
 
-    let routerAddr = "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0";
-    let wethAddr = "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512";
+    let routerAddr = "0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9";
+    let wethAddr = "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0";
 
     let market = await MyTokenMarket.deploy(
         atoken.address,
         routerAddr,
         wethAddr,
+        susui.address,
         masterChef.address
     );
 

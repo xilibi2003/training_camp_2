@@ -12,9 +12,6 @@ interface ISushi is IERC20 {
 }
 
 
-
-
-
 // MasterChef is the master of Sushi. He can make Sushi and he is a fair guy.
 //
 // Note that it's ownable and the owner wields tremendous power. The ownership
