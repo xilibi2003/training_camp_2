@@ -15,17 +15,11 @@ contract CallOptToken is ERC20, Ownable {
   address public udscToken;
   uint public settlementTime;
   uint public constant during = 1 days; // 1 day
-
-  struct OptInfo {
-      uint price;
-      uint settlementTime;
-  }
-  // tokenID
-  mapping ( uint => OptInfo ) optInfo;
-
+  uint price;
+  
   constructor(address usdc) ERC20("CallOptToken", "COPT") {
     udscToken = usdc;
-    price = 5000;  // 3000;
+    price = 5000;  
     settlementTime = block.timestamp + 100 days;
   }
 
